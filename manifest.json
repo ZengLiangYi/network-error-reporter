@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Network Error Reporter",
+  "description": "Generate structured network incident reports from Chrome DevTools without screenshots.",
+  "version": "0.1.0",
+  "minimum_chrome_version": "120",
+  "permissions": [],
+  "host_permissions": [],
+  "devtools_page": "devtools.html"
+}

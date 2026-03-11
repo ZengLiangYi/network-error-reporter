@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Network Error Reporter</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow">Network Error Reporter</p>
+          <h1>请求排查工作台</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-badges">
+            <span class="status-pill">DevTools Panel</span>
+            <span class="status-pill status-pill-muted">Markdown Ready</span>
+          </div>
+          <button id="refreshHarButton" class="ghost-button" type="button">刷新请求</button>
+        </div>
+      </header>
+
+      <main class="workspace-layout">
+        <section class="rail">
+          <div class="panel-card rail-card">
+            <div class="card-head">
+              <div>
+                <p class="section-kicker">Source</p>
+                <h2>请求列表</h2>
+              </div>
+              <label class="toggle">
+                <input id="showAllToggle" type="checkbox" />
+                <span>显示全部请求</span>
+              </label>
+            </div>
+            <div class="rail-meta">
+              <p id="apiLimitationNotice" class="subtle-note">
+                无法直接读取 Network 面板当前选中项，这里提供最近采集请求的轻量工作列表。
+              </p>
+            </div>
+            <div id="resourceFilters" class="filter-bar" role="tablist" aria-label="请求类型筛选">
+              <button class="filter-chip active" data-filter="fetch-xhr" type="button">Fetch/XHR</button>
+              <button class="filter-chip" data-filter="document" type="button">Doc</button>
+              <button class="filter-chip" data-filter="asset" type="button">JS/CSS</button>
+              <button class="filter-chip" data-filter="media" type="button">Img/Media</button>
+              <button class="filter-chip" data-filter="other" type="button">Other</button>
+              <button class="filter-chip" data-filter="all" type="button">All</button>
+            </div>
+            <div id="requestList" class="request-list"></div>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="panel-card compose-card">
+            <div class="card-head">
+              <div>
+                <p class="section-kicker">Compose</p>
+                <h2>补充上下文</h2>
+              </div>
+              <span id="selectionBadge" class="badge">未选择请求</span>
+            </div>
+
+            <div class="compose-inner">
+              <div id="warningBanner" class="warning-banner hidden"></div>
+
+              <div class="form-grid">
+                <div class="field field-wide">
+                  <span>影响范围</span>
+                  <div class="pill-group">
+                    <button class="pill-option" data-target="impact" data-value="单用户" type="button">单用户</button>
+                    <button class="pill-option" data-target="impact" data-value="多用户" type="button">多用户</button>
+                    <button class="pill-option" data-target="impact" data-value="全量用户" type="button">全量用户</button>
+                  </div>
+                </div>
+
+                <div class="field field-wide">
+                  <span>错误频率</span>
+                  <div class="pill-group">
+                    <button class="pill-option" data-target="frequency" data-value="间歇性" type="button">间歇性</button>
+                    <button class="pill-option" data-target="frequency" data-value="持续性" type="button">持续性</button>
+                  </div>
+                </div>
+
+                <div class="field field-wide">
+                  <span>报告内容</span>
+                  <div class="field-chooser">
+                    <label class="mini-check"><input id="includeRequestHeaders" type="checkbox" checked /> 自定义 Request Headers</label>
+                    <label class="mini-check"><input id="includeResponseHeaders" type="checkbox" checked /> 自定义 Response Headers</label>
+                    <label class="mini-check"><input id="includeQueryParams" type="checkbox" checked /> Query Params</label>
+                    <label class="mini-check"><input id="includeRequestPayload" type="checkbox" checked /> Request Payload</label>
+                    <label class="mini-check"><input id="includeResponseBody" type="checkbox" checked /> 响应结果摘要</label>
+                  </div>
+                </div>
+
+                <label class="field field-wide">
+                  <span>复现步骤</span>
+                  <textarea id="reproSteps" rows="3" placeholder="例如：登录后进入个人中心，点击保存"></textarea>
+                </label>
+
+                <label class="field field-wide">
+                  <span>预期结果</span>
+                  <textarea id="expectedResult" rows="2" placeholder="例如：接口返回用户资料并正常渲染"></textarea>
+                </label>
+
+                <label class="field field-wide">
+                  <span>实际结果</span>
+                  <textarea id="actualResult" rows="2" placeholder="例如：接口 502，页面展示加载失败"></textarea>
+                </label>
+
+                <label class="field field-wide">
+                  <span>备注</span>
+                  <textarea id="remarks" rows="2" placeholder="补充业务背景或排查线索"></textarea>
+                </label>
+              </div>
+
+              <p class="subtle-note inline-note">选中左侧请求后会自动生成报告，这里只补业务语境和报告粒度。</p>
+            </div>
+          </div>
+
+          <div class="panel-card preview-card">
+            <div class="preview-toolbar">
+              <div>
+                <p class="section-kicker">Preview</p>
+                <h2>报告预览</h2>
+              </div>
+              <div class="toolbar-cluster">
+                <span id="sensitiveBadge" class="badge badge-muted">敏感字段：0</span>
+                <button id="copyButton" class="primary-button" type="button" disabled>复制 Markdown</button>
+              </div>
+            </div>
+
+            <div id="emptyState" class="empty-state">
+              <h3>先从左侧选一条请求</h3>
+              <p>推荐选择 4xx / 5xx / status 0 的请求，选中后会自动生成报告。</p>
+            </div>
+
+            <div id="reportPreview" class="report-preview hidden"></div>
+            <div class="preview-footer">
+              <span id="copyStatus" class="subtle-note"></span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="requestItemTemplate">
+      <button class="request-item" type="button">
+        <div class="request-item-top">
+          <span class="request-method"></span>
+          <span class="request-status"></span>
+        </div>
+        <div class="request-main">
+          <div class="request-path"></div>
+          <div class="request-meta"></div>
+        </div>
+      </button>
+    </template>
+
+    <script type="module" src="panel/main.js"></script>
+  </body>
+</html>
