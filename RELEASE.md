@@ -19,8 +19,15 @@ powershell -ExecutionPolicy Bypass -File .\scripts\package-extension.ps1
 
 产物：
 
-- `release\network-error-reporter-<version>\`
-- `release\network-error-reporter-<version>.zip`
+- `release\network-error-reporter-<version>-unpacked\`
+- `release\network-error-reporter-<version>-unpacked.zip`
+
+注意：
+
+- 这里生成的是“可分发的未打包扩展目录”和对应压缩包
+- 不能把 zip 直接当作 Chrome 可安装扩展使用
+- 正确安装方式是先解压，再通过 `Load unpacked` 加载解压后的目录
+- 如果需要 `.crx`，请使用 Chrome 的“打包扩展程序”流程自行生成
 
 ## Chrome Web Store materials
 

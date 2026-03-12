@@ -15,7 +15,7 @@ if (-not $version) {
 }
 
 $releaseRoot = Join-Path $projectRoot "release"
-$packageName = "network-error-reporter-$version"
+$packageName = "network-error-reporter-$version-unpacked"
 $stageDir = Join-Path $releaseRoot $packageName
 $zipPath = Join-Path $releaseRoot "$packageName.zip"
 

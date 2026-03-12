@@ -1,56 +1,117 @@
 # Network Error Reporter
 
-一个可直接加载到 Chrome 的 DevTools 扩展，用来把网络请求整理成结构化错误报告，并支持直接导出为图片。
+A Chrome DevTools extension for turning network failures into structured reports that frontend and backend engineers can share immediately.
 
-## v1 范围
+## Why
 
-- 在 DevTools 中新增 `Error Report` 面板
-- 读取 HAR 和新完成的请求
-- 默认展示最近失败的 `Fetch/XHR` 请求，可切换资源分类和查看全部请求
-- 选中请求后生成 Markdown 报告
-- 手动补充影响评估和复现说明
-- 复制 Markdown 报告到剪贴板
-- 导出报告图片
-- 检测敏感字段并在复制前二次确认
+When a request fails in Chrome DevTools, teams usually pass around screenshots plus manually written context. That is slow, repetitive, and often incomplete.
 
-已确认不做：
+Network Error Reporter turns a failed request into:
 
-- 网络面板截图
-- 扩展内生成 cURL
-- HAR 导出
-- 同类请求聚合
+- a structured Markdown report
+- a readable report preview
+- an exportable report image
 
-## 本地使用
+The goal is simple: reduce the back-and-forth between frontend and backend during API debugging.
 
-1. 打开 `chrome://extensions`
-2. 开启“开发者模式”
-3. 选择“加载已解压的扩展程序”
-4. 选择当前目录：`C:\Users\Rayner\Project\network-error-reporter`
-5. 打开任意页面的 DevTools，切到 `Error Report` 面板
+## Features
 
-## 打包发布
+- adds an `Error Report` panel inside Chrome DevTools
+- reads HAR entries and newly finished requests
+- defaults to failed `Fetch/XHR` requests
+- extracts useful request and response details instead of copying DevTools noise
+- lets you add impact scope, frequency, repro notes, and remarks
+- copies Markdown with one click
+- exports the rendered report as an image
+- highlights possible sensitive fields before sharing
 
-执行下面的命令会生成一个可分发的 zip 包：
+## Core flow
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\package-extension.ps1
-```
+1. Open Chrome DevTools.
+2. Switch to the `Error Report` panel.
+3. Select a failed request from the list.
+4. Review the generated report.
+5. Copy Markdown or export an image.
 
-产物位置：
+## Project status
 
-- `release\network-error-reporter-<version>\`
-- `release\network-error-reporter-<version>.zip`
+Current scope:
 
-首次打包前如需重新生成图标：
+- single-request reporting
+- request filtering by resource type
+- structured preview and export
+
+Not included:
+
+- screenshot capture from the Network panel
+- built-in cURL generation
+- HAR export
+- multi-request aggregation
+
+## Local development
+
+1. Open `chrome://extensions`.
+2. Enable Developer Mode.
+3. Click `Load unpacked`.
+4. Select this project directory.
+5. Open any page's DevTools and switch to the `Error Report` panel.
+
+## Packaging
+
+Generate icons if needed:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\generate-icons.ps1
 ```
 
-## 说明
+Package the extension:
 
-- Chrome DevTools 扩展 API 无法直接读取 Network 面板“当前选中的请求”，所以 v1 使用“面板内请求列表 + 手动选择”的交互。
-- 如果需要 cURL，请直接在 Chrome Network 面板使用原生 `Copy as cURL`。
-- 导出图片优先尝试写入剪贴板，若浏览器策略不允许，则自动下载 `.png` 文件。
-- 当前 UI 采用原生模块化前端结构：`panel/main.js` 负责交互编排，`panel/report.js` 负责请求归一化与报告生成。
-- 隐私与发布信息分别见 `PRIVACY.md` 和 `RELEASE.md`。
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\package-extension.ps1
+```
+
+Artifacts:
+
+- `release\network-error-reporter-<version>-unpacked\`
+- `release\network-error-reporter-<version>-unpacked.zip`
+
+Important:
+
+- the generated zip is a distribution archive for GitHub or file sharing
+- Chrome cannot install this zip directly as a packaged extension
+- to use it, unzip it first and then load the extracted folder through `Load unpacked`
+- a real installable `.crx` package requires Chrome's own packaging flow and signing key management
+
+## Automated releases
+
+This project supports automated GitHub Releases through GitHub Actions.
+
+- push a tag like `v0.2.0`
+- GitHub Actions will build the distribution zip and publish a Release automatically
+
+Release documentation:
+
+- `docs/releasing.md`
+
+## Architecture
+
+- `panel/main.js`: panel interaction and preview rendering
+- `panel/report.js`: request normalization and report generation
+- `panel.html` / `panel.css`: panel UI
+- `scripts/`: packaging and asset helpers
+
+## Notes
+
+- Chrome DevTools extensions cannot directly read the currently selected request in the native Network panel, so this project uses its own request list for selection.
+- If you need cURL, use Chrome Network panel's native `Copy as cURL`.
+- Image export first tries clipboard output, then falls back to downloading a `.png` file.
+
+## Community
+
+- Contribution guide: `CONTRIBUTING.md`
+- Code of conduct: `CODE_OF_CONDUCT.md`
+- Security policy: `SECURITY.md`
+
+## License
+
+MIT

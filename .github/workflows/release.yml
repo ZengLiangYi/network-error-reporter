@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Generate icons
+        shell: pwsh
+        run: .\scripts\generate-icons.ps1
+
+      - name: Syntax check
+        shell: pwsh
+        run: |
+          node --check .\panel\main.js
+          node --check .\panel\report.js
+
+      - name: Build distribution
+        shell: pwsh
+        run: .\scripts\package-extension.ps1
+
+      - name: Read extension version
+        id: version
+        shell: pwsh
+        run: |
+          $manifest = Get-Content .\manifest.json -Raw | ConvertFrom-Json
+          "version=$($manifest.version)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            release/network-error-reporter-${{ steps.version.outputs.version }}-unpacked.zip
+            LICENSE
+            README.md
