@@ -1,5 +1,7 @@
 # Releasing
 
+[中文发布说明](./releasing_zh.md)
+
 This repository uses GitHub Actions to automate GitHub Releases.
 
 ## Release flow

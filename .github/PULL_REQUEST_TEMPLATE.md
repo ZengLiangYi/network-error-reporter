@@ -1,12 +1,12 @@
-## Summary
+## Summary / 概要
 
 - 
 
-## Why
+## Why / 背景
 
 - 
 
-## Validation
+## Validation / 验证
 
 - [ ] Reloaded the extension in `chrome://extensions`
 - [ ] Verified request selection and preview generation
@@ -15,6 +15,6 @@
 - [ ] Ran `node --check .\panel\main.js`
 - [ ] Ran `node --check .\panel\report.js`
 
-## Screenshots
+## Screenshots / 截图
 
 - 

@@ -1,5 +1,7 @@
 # Contributing
 
+[中文贡献指南](./CONTRIBUTING_zh.md)
+
 Thanks for contributing to Network Error Reporter.
 
 ## Development setup

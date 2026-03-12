@@ -1,5 +1,5 @@
-name: Bug report
-description: Report a defect in the extension
+name: Bug report / 问题反馈
+description: Report a defect in the extension / 提交扩展缺陷
 title: "[Bug]: "
 labels:
   - bug
@@ -7,41 +7,41 @@ body:
   - type: textarea
     id: summary
     attributes:
-      label: Summary
-      description: What went wrong?
+      label: Summary / 问题概述
+      description: What went wrong? / 发生了什么问题？
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
-      description: List the exact steps.
+      label: Steps to reproduce / 复现步骤
+      description: List the exact steps. / 请列出准确的复现步骤。
       placeholder: |
-        1. Open page
-        2. Open DevTools
-        3. Switch to Error Report
+        1. Open page / 打开页面
+        2. Open DevTools / 打开 DevTools
+        3. Switch to Error Report / 切换到 Error Report
         4. ...
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior
+      label: Expected behavior / 预期行为
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
-      label: Actual behavior
+      label: Actual behavior / 实际行为
     validations:
       required: true
   - type: input
     id: chrome_version
     attributes:
-      label: Chrome version
-      placeholder: "e.g. 145.0.0.0"
+      label: Chrome version / Chrome 版本
+      placeholder: "e.g. / 例如 145.0.0.0"
   - type: textarea
     id: notes
     attributes:
-      label: Additional context
-      description: Include screenshots or logs if needed.
+      label: Additional context / 补充信息
+      description: Include screenshots or logs if needed. / 如有需要可附截图或日志。

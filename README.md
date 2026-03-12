@@ -1,5 +1,7 @@
 # Network Error Reporter
 
+[中文说明](./README_zh.md) | [Contributing](./CONTRIBUTING.md) | [Releasing](./docs/releasing.md)
+
 A Chrome DevTools extension for turning network failures into structured reports that frontend and backend engineers can share immediately.
 
 ## Why
@@ -91,7 +93,7 @@ This project supports automated GitHub Releases through GitHub Actions.
 
 Release documentation:
 
-- `docs/releasing.md`
+- [docs/releasing.md](./docs/releasing.md)
 
 ## Architecture
 
@@ -108,10 +110,10 @@ Release documentation:
 
 ## Community
 
-- Contribution guide: `CONTRIBUTING.md`
-- Code of conduct: `CODE_OF_CONDUCT.md`
-- Security policy: `SECURITY.md`
+- Contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- Security policy: [SECURITY.md](./SECURITY.md)
 
 ## License
 
-MIT
+[MIT](./LICENSE)

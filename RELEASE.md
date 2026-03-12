@@ -34,7 +34,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\package-extension.ps1
 - 扩展名称：`Network Error Reporter`
 - 简短描述：
   `Generate structured network incident reports from Chrome DevTools.`
-- 隐私说明：使用 [PRIVACY.md](C:/Users/Rayner/Project/network-error-reporter/PRIVACY.md)
+- 隐私说明：使用 [PRIVACY.md](./PRIVACY.md)
 - 图标：使用 `icons/icon128.png`
 
 ## Notes
