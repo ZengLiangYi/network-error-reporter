@@ -1,36 +1,35 @@
 # Releasing
 
-[中文发布说明](./releasing_zh.md)
+[English Release Guide](./releasing_en.md)
 
-This repository uses GitHub Actions to automate GitHub Releases.
+这个仓库使用 GitHub Actions 自动化 GitHub Releases。
 
-## Release flow
+## 发布流程
 
-1. Update `manifest.json` version if needed.
-2. Commit changes to `main`.
-3. Create and push a tag:
+1. 如有需要，先更新 `manifest.json` 版本号。
+2. 将变更提交到 `main`。
+3. 创建并推送 tag：
 
 ```powershell
 git tag v0.2.0
 git push origin v0.2.0
 ```
 
-4. GitHub Actions will:
-   - generate icons
-   - run syntax checks
-   - build the unpacked distribution zip
-   - create a GitHub Release automatically
-   - upload the release asset
+4. GitHub Actions 会自动：
+   - 生成图标
+   - 运行语法检查
+   - 构建未打包分发 zip
+   - 自动创建 GitHub Release
+   - 上传发布资产
 
-## Release asset
+## 发布产物
 
-The uploaded asset is:
+上传的资产为：
 
 - `network-error-reporter-<version>-unpacked.zip`
 
-This is a distribution archive for `Load unpacked`.
-It is not a `.crx` installer package.
+这是用于 `Load unpacked` 的分发压缩包，不是 `.crx` 安装包。
 
-## Manual trigger
+## 手动触发
 
-You can also trigger the workflow manually from the GitHub Actions tab with `workflow_dispatch`.
+你也可以在 GitHub Actions 页面通过 `workflow_dispatch` 手动触发。

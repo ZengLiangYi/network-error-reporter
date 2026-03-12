@@ -1,119 +1,119 @@
 # Network Error Reporter
 
-[中文说明](./README_zh.md) | [Contributing](./CONTRIBUTING.md) | [Releasing](./docs/releasing.md)
+[English README](./README_en.md) | [贡献指南](./CONTRIBUTING.md) | [发布说明](./docs/releasing.md)
 
-A Chrome DevTools extension for turning network failures into structured reports that frontend and backend engineers can share immediately.
+一个 Chrome DevTools 扩展，用来把网络失败请求整理成可直接分享的结构化报告。
 
-## Why
+## 为什么做这个工具
 
-When a request fails in Chrome DevTools, teams usually pass around screenshots plus manually written context. That is slow, repetitive, and often incomplete.
+当 Chrome DevTools 里的请求失败时，团队通常会用截图加手写说明来沟通问题。这种方式慢、重复，而且经常缺上下文。
 
-Network Error Reporter turns a failed request into:
+Network Error Reporter 会把一次失败请求转换成：
 
-- a structured Markdown report
-- a readable report preview
-- an exportable report image
+- 结构化 Markdown 报告
+- 可读的真实报告预览
+- 可导出的报告图片
 
-The goal is simple: reduce the back-and-forth between frontend and backend during API debugging.
+目标很直接：减少前后端在 API 排查过程中的来回沟通成本。
 
-## Features
+## 功能特性
 
-- adds an `Error Report` panel inside Chrome DevTools
-- reads HAR entries and newly finished requests
-- defaults to failed `Fetch/XHR` requests
-- extracts useful request and response details instead of copying DevTools noise
-- lets you add impact scope, frequency, repro notes, and remarks
-- copies Markdown with one click
-- exports the rendered report as an image
-- highlights possible sensitive fields before sharing
+- 在 Chrome DevTools 中新增 `Error Report` 面板
+- 读取 HAR 和新完成的请求
+- 默认聚焦失败的 `Fetch/XHR` 请求
+- 提炼有价值的请求/响应信息，而不是原样搬运 DevTools 噪音
+- 支持补充影响范围、错误频率、复现说明和备注
+- 一键复制 Markdown
+- 导出渲染后的报告图片
+- 分享前提示潜在敏感字段
 
-## Core flow
+## 核心流程
 
-1. Open Chrome DevTools.
-2. Switch to the `Error Report` panel.
-3. Select a failed request from the list.
-4. Review the generated report.
-5. Copy Markdown or export an image.
+1. 打开 Chrome DevTools。
+2. 切换到 `Error Report` 面板。
+3. 在列表中选择一条失败请求。
+4. 检查生成后的报告。
+5. 复制 Markdown 或导出图片。
 
-## Project status
+## 项目现状
 
-Current scope:
+当前范围：
 
-- single-request reporting
-- request filtering by resource type
-- structured preview and export
+- 单请求报告
+- 按资源类型筛选请求
+- 结构化预览与导出
 
-Not included:
+当前不包含：
 
-- screenshot capture from the Network panel
-- built-in cURL generation
-- HAR export
-- multi-request aggregation
+- Network 面板截图采集
+- 内置 cURL 生成
+- HAR 导出
+- 多请求聚合分析
 
-## Local development
+## 本地开发
 
-1. Open `chrome://extensions`.
-2. Enable Developer Mode.
-3. Click `Load unpacked`.
-4. Select this project directory.
-5. Open any page's DevTools and switch to the `Error Report` panel.
+1. 打开 `chrome://extensions`。
+2. 开启 Developer Mode。
+3. 点击 `Load unpacked`。
+4. 选择当前项目目录。
+5. 打开任意页面的 DevTools，切到 `Error Report` 面板。
 
-## Packaging
+## 打包分发
 
-Generate icons if needed:
+如需重新生成图标：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\generate-icons.ps1
 ```
 
-Package the extension:
+打包分发目录：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\package-extension.ps1
 ```
 
-Artifacts:
+产物：
 
 - `release\network-error-reporter-<version>-unpacked\`
 - `release\network-error-reporter-<version>-unpacked.zip`
 
-Important:
+注意：
 
-- the generated zip is a distribution archive for GitHub or file sharing
-- Chrome cannot install this zip directly as a packaged extension
-- to use it, unzip it first and then load the extracted folder through `Load unpacked`
-- a real installable `.crx` package requires Chrome's own packaging flow and signing key management
+- 生成的 zip 是用于 GitHub 或文件分享的分发压缩包
+- Chrome 不能直接把这个 zip 当作已打包扩展安装
+- 正确使用方式是先解压，再通过 `Load unpacked` 加载解压目录
+- 真正可安装的 `.crx` 需要 Chrome 自带打包流程和签名密钥管理
 
-## Automated releases
+## 自动发布
 
-This project supports automated GitHub Releases through GitHub Actions.
+这个项目支持通过 GitHub Actions 自动发布 GitHub Releases。
 
-- push a tag like `v0.2.0`
-- GitHub Actions will build the distribution zip and publish a Release automatically
+- 推送类似 `v0.2.0` 的 tag
+- GitHub Actions 会自动构建分发 zip 并发布 Release
 
-Release documentation:
+发布文档：
 
 - [docs/releasing.md](./docs/releasing.md)
 
-## Architecture
+## 项目结构
 
-- `panel/main.js`: panel interaction and preview rendering
-- `panel/report.js`: request normalization and report generation
-- `panel.html` / `panel.css`: panel UI
-- `scripts/`: packaging and asset helpers
+- `panel/main.js`: 面板交互与预览渲染
+- `panel/report.js`: 请求归一化与报告生成
+- `panel.html` / `panel.css`: 面板 UI
+- `scripts/`: 打包和资源辅助脚本
 
-## Notes
+## 说明
 
-- Chrome DevTools extensions cannot directly read the currently selected request in the native Network panel, so this project uses its own request list for selection.
-- If you need cURL, use Chrome Network panel's native `Copy as cURL`.
-- Image export first tries clipboard output, then falls back to downloading a `.png` file.
+- Chrome DevTools 扩展无法直接读取原生 Network 面板当前选中的请求，所以本项目使用自己的请求列表进行选择。
+- 如果你需要 cURL，请直接使用 Chrome Network 面板原生的 `Copy as cURL`。
+- 图片导出会优先尝试复制到剪贴板，失败时会回退为下载 `.png` 文件。
 
-## Community
+## 社区
 
-- Contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
-- Code of conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
-- Security policy: [SECURITY.md](./SECURITY.md)
+- 贡献指南：[CONTRIBUTING.md](./CONTRIBUTING.md)
+- 行为准则：[CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- 安全策略：[SECURITY.md](./SECURITY.md)
 
-## License
+## 许可证
 
 [MIT](./LICENSE)

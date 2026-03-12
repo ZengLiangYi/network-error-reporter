@@ -43,11 +43,40 @@ jobs:
           $manifest = Get-Content .\manifest.json -Raw | ConvertFrom-Json
           "version=$($manifest.version)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
+      - name: Prepare release notes
+        id: notes
+        shell: pwsh
+        run: |
+          $notes = @"
+          ## 发布说明
+
+          - 自动构建未打包扩展分发包
+          - 自动运行语法检查
+          - 自动上传 GitHub Release 资产
+
+          ## 使用方式
+
+          1. 下载 `network-error-reporter-${{ steps.version.outputs.version }}-unpacked.zip`
+          2. 解压压缩包
+          3. 打开 `chrome://extensions`
+          4. 开启开发者模式
+          5. 点击 `Load unpacked`
+          6. 选择解压后的目录
+
+          ## 注意
+
+          - 该压缩包是用于 `Load unpacked` 的分发包
+          - 它不是 `.crx` 安装包
+          - 默认文档语言为中文，英文文档请查看仓库中的 `README_en.md`
+          "@
+          $notes | Out-File -FilePath release-notes.md -Encoding utf8
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          body_path: release-notes.md
           files: |
             release/network-error-reporter-${{ steps.version.outputs.version }}-unpacked.zip
             LICENSE
             README.md
+            README_en.md
