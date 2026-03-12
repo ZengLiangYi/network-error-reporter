@@ -83,12 +83,20 @@ export async function buildMarkdownReport({ request, formState, pageUrl, respons
 
   const detailLines = [];
   if (formState.includeRequestHeaders) {
-    detailLines.push(`- Request 鉴权/链路头：\n${requestTraceHeaders}`);
-    detailLines.push(`- Request 业务自定义头：\n${requestBusinessHeaders}`);
+    if (requestTraceHeaders) {
+      detailLines.push(`- Request 鉴权/链路头：\n${requestTraceHeaders}`);
+    }
+    if (requestBusinessHeaders) {
+      detailLines.push(`- Request 业务自定义头：\n${requestBusinessHeaders}`);
+    }
   }
   if (formState.includeResponseHeaders) {
-    detailLines.push(`- Response 鉴权/链路头：\n${responseTraceHeaders}`);
-    detailLines.push(`- Response 业务自定义头：\n${responseBusinessHeaders}`);
+    if (responseTraceHeaders) {
+      detailLines.push(`- Response 鉴权/链路头：\n${responseTraceHeaders}`);
+    }
+    if (responseBusinessHeaders) {
+      detailLines.push(`- Response 业务自定义头：\n${responseBusinessHeaders}`);
+    }
   }
   if (formState.includeQueryParams && request.queryString.length > 0) {
     detailLines.push(`- Query Params：\n${queryParams}`);
@@ -353,7 +361,7 @@ function getHeaderValue(headers, headerName) {
 }
 
 function formatHeaders(headers) {
-  if (!headers.length) return "无额外关键信息";
+  if (!headers.length) return "";
   return fenceBlock(headers.map((header) => `${header.name}: ${header.value}`).join("\n"));
 }
 
